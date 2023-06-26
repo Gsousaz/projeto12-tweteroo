@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-const app = express();
+const app = express(); // app do servidor
 const PORT = 5000;
 const users = [];
 const tweets = [];
@@ -12,9 +12,7 @@ app.post("/sign-up", (req, res) => {
     avatar: req.body.avatar,
   };
   users.push(newUser);
-  console.log(users);
-  console.log(users);
-  res.send(users);
+  res.send("OK");
 });
 
 app.post("/tweets", (req, res) => {
@@ -29,6 +27,17 @@ app.post("/tweets", (req, res) => {
   } else {
     res.send("UNAUTHORIZED");
   }
+});
+
+app.get("/tweets", (req, res) => {
+  const lastTenTweets = tweets.slice(-10).map((tweet) => {
+    const user = users.find((user) => user.username === tweet.username);
+    return {
+      ...tweet,
+      avatar: user.avatar,
+    };
+  });
+  res.send(lastTenTweets);
 });
 
 app.listen(PORT, () => {
